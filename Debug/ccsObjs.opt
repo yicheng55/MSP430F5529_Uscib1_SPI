@@ -1,1 +1,1 @@
-"./MX25_APP.obj" "./MX25_CMD.obj" "../lnk_msp430f5529.cmd" -l"libc.a" -l"libmath.a" 
+"./MX25_APP.obj" "./MX25_CMD.obj" "./SST25VF.obj" "./spi.obj" "../lnk_msp430f5529.cmd" -l"libc.a" -l"libmath.a" 

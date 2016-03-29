@@ -7,11 +7,10 @@
  * $Id: MX25_CMD.c,v 1.31 2015/03/24 01:06:33 mxclldb1 Exp $
  */
 
-#include    <stdio.h>
-#include    <string.h>
-#include 	"MX25_CMD.h"
-#include 	"spi.h"
-#include 	"SST25VF.h"
+
+#include "MX25_CMD.h"
+#include "spi.h"
+#include "SST25VF.h"
 
 /*
  --Common functions
@@ -50,8 +49,7 @@ void Initial_Spi()
 #else
 	#ifdef    MSP430F55xx
     // Init SPI
-    sst25vf_SetCurrentDevice(0);
-    sst25vf_Init();
+    spiInit(SPI_MODE0);
 	#endif	//end MSP430F55xx
 #endif
 
@@ -101,9 +99,8 @@ void CS_High()
  */
 void InsertDummyCycle( uint8 dummy_cycle )
 {
-    uint8 i;
 #ifdef GPIO_SPI
-
+    uint8 i;
     for( i=0; i < dummy_cycle; i=i+1 )
     {
         SCLK = 0;
@@ -111,11 +108,6 @@ void InsertDummyCycle( uint8 dummy_cycle )
     }
 #else
     //--- insert your code here. ---//
-    for(i=0; i< (dummy_cycle/8); i++)
-    {
-    	spiSendByte(0x00);
-    }
-
 #endif
 }
 
@@ -238,7 +230,6 @@ void SendByte( uint8 byte_value, uint8 transfer_type )
 #ifdef SIO
     case SIO: // Single I/O
         //--- insert your code here for single IO transfer. ---//
-    	spiSendByte(byte_value);
         break;
 #endif
 #ifdef DIO
@@ -276,6 +267,7 @@ void SendByte( uint8 byte_value, uint8 transfer_type )
     }
 #endif  /* End of GPIO_SPI */
 
+
 }
 /*
  * Function:       GetByte
@@ -294,12 +286,11 @@ void SendByte( uint8 byte_value, uint8 transfer_type )
  */
 uint8 GetByte( uint8 transfer_type )
 {
-    uint8 data_buf;
-    data_buf = 0;
-
 #ifdef GPIO_SPI
     uint16 i;
     uint8 cycle_cnt;
+    uint8 data_buf;
+    data_buf = 0;
     cycle_cnt = 8 >> transfer_type;
 
     switch( transfer_type )
@@ -430,7 +421,6 @@ uint8 GetByte( uint8 transfer_type )
 #ifdef SIO
     case SIO: // Single I/O
         //--- insert your code here for single IO receive. ---//
-    	data_buf = spiGetByte();
         break;
 #endif
 #ifdef DIO
@@ -466,6 +456,12 @@ uint8 GetByte( uint8 transfer_type )
         break;
     }
 #endif  /* End of GPIO_SPI */
+
+#ifdef UsciB1_SPI
+    uint8 data_buf;
+    data_buf = 0;
+    data_buf = spiGetByte();
+#endif  /* End of UsciB1_SPI */
 
     return data_buf;
 }
@@ -708,7 +704,7 @@ ReturnMsg CMD_RDID( uint32 *Identification )
     temp =  gDataBuffer[0];
     temp =  (temp << 8) | gDataBuffer[1];
     *Identification =  (temp << 8) | gDataBuffer[2];
-    printf("id = %lx \n",*Identification);
+
     return FlashOperationSuccess;
 }
 
@@ -734,7 +730,7 @@ ReturnMsg CMD_RES( uint8 *ElectricIdentification )
 
     // Chip select go high to end a flash command
     CS_High();
-    printf("ElectricIdentification = %lx \n", *ElectricIdentification);
+
     return FlashOperationSuccess;
 }
 
@@ -769,7 +765,7 @@ ReturnMsg CMD_REMS( uint16 *REMS_Identification, FlashStatus *fsptr )
 
     // Chip select go high to end a flash command
     CS_High();
-    printf("REMS_Identification = %X \n", *REMS_Identification );
+
     return FlashOperationSuccess;
 }
 

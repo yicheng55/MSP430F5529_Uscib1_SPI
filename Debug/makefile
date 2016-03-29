@@ -10,6 +10,8 @@ ORDERED_OBJS += \
 $(GEN_CMDS__FLAG) \
 "./MX25_APP.obj" \
 "./MX25_CMD.obj" \
+"./SST25VF.obj" \
+"./spi.obj" \
 "../lnk_msp430f5529.cmd" \
 -l"libc.a" \
 -l"libmath.a" \
@@ -116,36 +118,38 @@ EXE_OUTPUTS__QUOTED += \
 "MSP430F5529_Uscib1_SPI.out" \
 
 BIN_OUTPUTS += \
-MSP430F5529_Uscib1_SPI.hex \
+MSP430F5529_Uscib1_SPI.txt \
 
 BIN_OUTPUTS__QUOTED += \
-"MSP430F5529_Uscib1_SPI.hex" \
+"MSP430F5529_Uscib1_SPI.txt" \
 
 
 # All Target
-all: MSP430F5529_Uscib1_SPI.out
+all: MSP430F5529_Uscib1_SPI.out secondary-outputs
 
 # Tool invocations
 MSP430F5529_Uscib1_SPI.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MSP430 Linker'
-	"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/bin/cl430" -vmspx --abi=eabi --data_model=restricted --advice:power=all -g --define=__MSP430F5529__ --diag_warning=225 --display_error_number --diag_wrap=off --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --printf_support=minimal -z -m"MSP430F5529_Uscib1_SPI.map" --heap_size=160 --stack_size=160 --cinit_hold_wdt=on -i"c:/ti/ccsv6/ccs_base/msp430/include" -i"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/lib" -i"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/include" -i"c:/ti/ccsv6/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="MSP430F5529_Uscib1_SPI_linkInfo.xml" --rom_model -o "MSP430F5529_Uscib1_SPI.out" $(ORDERED_OBJS)
+	"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/bin/cl430" -vmspx --abi=eabi --data_model=restricted --advice:power="all" -g --define=__MSP430F5529__ --diag_warning=225 --display_error_number --diag_wrap=off --silicon_errata=CPU21 --silicon_errata=CPU22 --silicon_errata=CPU23 --silicon_errata=CPU40 --printf_support=full -z -m"MSP430F5529_Uscib1_SPI.map" --heap_size=480 --stack_size=480 --cinit_hold_wdt=on -i"c:/ti/ccsv6/ccs_base/msp430/include" -i"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/lib" -i"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/include" -i"c:/ti/ccsv6/ccs_base/msp430/lib/5xx_6xx_FRxx" --reread_libs --warn_sections --display_error_number --diag_wrap=off --xml_link_info="MSP430F5529_Uscib1_SPI_linkInfo.xml" --rom_model -o "MSP430F5529_Uscib1_SPI.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-MSP430F5529_Uscib1_SPI.hex: $(EXE_OUTPUTS)
+MSP430F5529_Uscib1_SPI.txt: $(EXE_OUTPUTS)
 	@echo 'Invoking: MSP430 Hex Utility'
-	"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/bin/hex430" --memwidth=8 --romwidth=8 -o "MSP430F5529_Uscib1_SPI.hex" $(EXE_OUTPUTS__QUOTED)
+	"c:/ti/ccsv6/tools/compiler/ti-cgt-msp430_4.4.1/bin/hex430" --memwidth=8 --romwidth=8 --ti_txt -o "MSP430F5529_Uscib1_SPI.txt" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "MX25_APP.pp" "MX25_CMD.pp" 
-	-$(RM) "MX25_APP.obj" "MX25_CMD.obj" 
+	-$(RM) "MX25_APP.pp" "MX25_CMD.pp" "SST25VF.pp" "spi.pp" 
+	-$(RM) "MX25_APP.obj" "MX25_CMD.obj" "SST25VF.obj" "spi.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
+
+secondary-outputs: $(BIN_OUTPUTS)
 
 .PHONY: all clean dependents
 .SECONDARY:

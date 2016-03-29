@@ -8,6 +8,8 @@
  * $Id: MX25_APP.c,v 1.4 2012/01/03 08:00:06 modelqa Exp $
  */
 
+#include    <stdio.h>
+#include    <string.h>
 #include    <stdlib.h>
 #include    "MX25_CMD.h"
 
@@ -44,6 +46,7 @@ uint8 FlashID_Test( void )
     ReturnMsg  msg;
 
     /* Read flash device id */
+
     msg =  CMD_RDID( &flash_id );
     if( msg != (ReturnMsg)FlashOperationSuccess )
         return FALSE;
@@ -77,24 +80,21 @@ uint8 FlashID_Test( void )
            Error_inc( error_cnt );
     }
 
-    if( error_cnt != 0 )
-        return FALSE;
-    else
-        return TRUE;
+    return error_cnt;
 }
 /*
  * Simple flash read/write test
  */
 uint8 FlashReadWrite_Test( void )
 {
-    ReturnMsg  message= 0;
-    FlashStatus  flash_state = {0};
+    //ReturnMsg  message= 0;
+    //FlashStatus  flash_state = {0};
 
     uint32  flash_addr;
     uint32  trans_len = 0;
     uint16  i=0, error_cnt = 0;
     uint16  seed = 0;
-    uint8   st_reg = 0;
+    //uint8   st_reg = 0;
     uint8   memory_addr[TRANS_LENGTH] = {0};
     uint8   memory_addr_cmp[TRANS_LENGTH] = {0};
 
