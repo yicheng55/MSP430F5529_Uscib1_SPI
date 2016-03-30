@@ -28,6 +28,11 @@ uint8  FlashReadWrite_Test( void );
  */
 void main()
 {
+	#ifdef    MSP430F55xx
+    	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+	#endif	//end MSP430F55xx
+
+
     Initial_Spi();
     FlashID_Test();        // Simple test : flash ID
     FlashReadWrite_Test(); // Simple test : flash read / write
@@ -79,7 +84,7 @@ uint8 FlashID_Test( void )
         if( rems_id != RESID0 )
            Error_inc( error_cnt );
     }
-
+    printf("ID Test error_cnt = %d \n",error_cnt);
     return error_cnt;
 }
 /*
@@ -128,11 +133,15 @@ uint8 FlashReadWrite_Test( void )
 
     /* Erase 4K sector of flash memory */
     CMD_SE( flash_addr );
+    printf("Write error_cnt = %d \n",error_cnt);
 
+    /*
     if( error_cnt != 0 )
         return FALSE;
     else
         return TRUE;
+    */
+    return  error_cnt;
 
 }
 

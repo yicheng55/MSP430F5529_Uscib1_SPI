@@ -1,0 +1,1 @@
+# MSP430F5529_Uscib1_SPI for MX25xx 

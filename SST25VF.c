@@ -176,7 +176,7 @@ uint16_t sst25vf_Init(void)
     }
     sst25vf_WRSR(0x00);
     sst25vf_DBSY();
-    printf("id = %x \n",id);
+    //printf("id = %x \n",id);
     return(id);
 }
 
